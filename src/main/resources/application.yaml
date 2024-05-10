@@ -1,0 +1,14 @@
+#spring.application.name=vcsvpl-api
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vcsvpl_db
+    username: postgres
+    password: 159357Rus116
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    database: postgresql
+    #for test
+    show-sql: true

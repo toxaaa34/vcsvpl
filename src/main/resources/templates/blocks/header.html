@@ -1,0 +1,22 @@
+<div th:fragment="header" class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <div class="col-md-3 mb-2 mb-md-0 ms-5">
+      <a href="/blog" class="h3 fw-normal text-center d-inline-flex link-body-emphasis text-decoration-none">
+        ProJava
+      </a>
+    </div>
+
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+      <li><a href="/blog" class="nav-link px-2 text-success">Главная</a></li>
+      <li><a href="/blog/add" class="nav-link px-2 text-success">Добавить запись</a></li>
+      <li><a th:href="'/blog/profile/' + ${username}" class="nav-link px-2 text-success">Профиль</a></li>
+      <li sec:authorize="hasAuthority('ADMIN')"><a href="/admin" class="nav-link px-2 text-success">Админка</a></li>
+    </ul>
+
+
+    <div class="col-md-3 text-end me-5">
+      <form th:action="@{/logout}" method="post">
+        <input type="submit" class="btn btn-primary btn-success" value="Выйти">
+      </form>
+    </div>
+
+</div>
