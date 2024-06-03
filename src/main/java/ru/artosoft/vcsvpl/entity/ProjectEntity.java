@@ -17,7 +17,20 @@ public class ProjectEntity {
     @Column(nullable = false)
     private Long authorId;
     @Column(nullable = false)
-    private String projectName, description;
+    private String authorName, description;
+    @Column(nullable = false)
+    private String projectName;
+    @Column(nullable = false, unique = true)
+    private String fullProjectName;
     @Column(nullable = false)
     private Boolean isPublic;
+
+    public ProjectEntity(Long authorId, String authorName, String projectName, String description, boolean isPublic) {
+        this.authorId = authorId;
+        this.authorName = authorName;
+        this.projectName = projectName;
+        this.fullProjectName = authorName + "/" + projectName;
+        this.description = description;
+        this.isPublic = isPublic;
+    }
 }

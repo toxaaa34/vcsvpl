@@ -99,13 +99,8 @@
 
     <div class="container mt-5 ">
         <h1 th:text="'Добро пожаловать, ' + ${#authentication.getPrincipal().getName()}"></h1>
-        <div th:each="el : ${posts}" class="alert mt-2 border-success-subtle bg-success-subtle">
-            <h2 th:text="${el.title}"></h2>
-            <div class="d-flex">
-            <p th:text="'Автор статьи: '"></p><a class="d-flex ms-1" th:href="'/blog/profile/' + ${el.author}" th:text="${el.author}"></a>
-            </div>
-            <p th:text="${el.anons}"></p>
-            <a th:href="'/blog/' + ${el.id}" class="btn:btn-warning">Подробнее...</a>
+        <div th:each="el : ${projects}" class="row pt-1">
+            <a th:href="'/repository/' +  ${el.fullProjectName}" th:text="${el.fullProjectName}"></a>
         </div>
     </div>
 

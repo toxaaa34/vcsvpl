@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="4.0">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="Anton Osipov"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2024-05-05 04:22:19 "/>
+        <attribute name="created" value="QW50b24gT3NpcG92O0RFU0tUT1AtMEM1SDZTVjsyMDI0LTA1LTA1OyIwMzo0MzowNSAiOzM0MTg="/>
+        <attribute name="edited" value="QW50b24gT3NpcG92O0RFU0tUT1AtMEM1SDZTVjsyMDI0LTA1LTA1OyIwNDoyMjoxOSAiOzY7MzUzNA=="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="x, y, z" type="Integer" array="False" size=""/>
+            <assign variable="x" expression="5"/>
+            <output expression="x" newline="True"/>
+            <assign variable="y" expression="10"/>
+            <assign variable="z" expression="sumInt(x, y)"/>
+            <output expression="z" newline="True"/>
+            <if expression="x != y">
+                <then>
+                    <output expression="&quot;you not loh&quot;" newline="True"/>
+                </then>
+                <else>
+                    <output expression="&quot;&#1058;&#1099; &#1085;&#1077; &#1083;&#1086;&#1093;&quot;" newline="True"/>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="sumInt" type="Integer" variable="sum">
+        <parameters>
+            <parameter name="num1" type="Integer" array="False"/>
+            <parameter name="num2" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sum" type="Integer" array="False" size=""/>
+            <assign variable="sum" expression="num1 + num2"/>
+        </body>
+    </function>
+</flowgorithm>

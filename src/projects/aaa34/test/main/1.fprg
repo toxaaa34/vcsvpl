@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="4.0">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="Anton Osipov"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2024-05-29 08:25:11 "/>
+        <attribute name="created" value="QW50b24gT3NpcG92O0RFU0tUT1AtMEM1SDZTVjsyMDI0LTA1LTA1OyIwMzo0MjozMCAiOzM0MTU="/>
+        <attribute name="edited" value="QW50b24gT3NpcG92O0RFU0tUT1AtMEM1SDZTVjsyMDI0LTA1LTI5OyIwODoyNToxMSAiOzI7MzUzNQ=="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <output expression="&quot;hello&quot;" newline="True"/>
+        </body>
+    </function>
+</flowgorithm>

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -28,11 +29,11 @@ public class SecurityConfig {
         http.
                 //csrf(csrf -> csrf.disable()).
                         authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/registration", "/", "/assets/**", "css/**").permitAll()
+                        .requestMatchers("/registration", "/", "/assets/**", "css/**", "js/**").permitAll()
                         .requestMatchers("/admin").permitAll()
                         .anyRequest().authenticated())
-                .formLogin((form) -> form.loginPage("/login").permitAll().defaultSuccessUrl("/admin"))
-                .logout((logout) -> logout.permitAll());
+                .formLogin((form) -> form.loginPage("/login").permitAll().defaultSuccessUrl("/welcome"))
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 }

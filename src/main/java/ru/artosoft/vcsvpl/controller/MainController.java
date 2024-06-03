@@ -38,34 +38,15 @@ public class MainController {
 
     @GetMapping("/login")
     public String login(Model model, @RequestParam(value = "registrationSuccess", required = false) String registrationSuccess) {
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserDetailsImpl) return "redirect:/admin";
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserDetailsImpl) return "redirect:/welcome";
         if (registrationSuccess != null && registrationSuccess.equals("true")) {
             model.addAttribute("registrationSuccess", "Вы успешно зарегистрировались!");
         }
         return "login";
     }
 
-
-    @GetMapping("/admin")
-    public String admin(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String name = authentication.getName();
-        UserEntity user = userRepository.findByUsername(name);
-        model.addAttribute("userid", user.getId());
-        model.addAttribute("users", userService.getAll());
-        model.addAttribute("username", user.getUsername());
-        return "admin";
-    }
-
-    @PostMapping("/admin/{id}/ban")
-    public String ban(@PathVariable(value = "id") long id, Model model) {
-        UserEntity user = userRepository.findById(id).orElseThrow();
-        userRepository.delete(user);
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/blog/profile/{name}")
-    public String profile(Model model, @PathVariable(value = "name") String name) {
+    @GetMapping("/profile/{username}")
+    public String profile(Model model, @PathVariable(value = "username") String name) {
         UserEntity user = userRepository.findByUsername(name);
         model.addAttribute("user", user);
         return "profile";
