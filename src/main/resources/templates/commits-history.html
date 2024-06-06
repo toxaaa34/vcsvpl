@@ -213,7 +213,7 @@
     <ul class="nav col-12 col-md-auto mb-2 justify-content-evenly mb-md-0">
         <li><a href ="#">Код/Блок-схема</a></li>
         <li><a href = "#">Pull requests</a></li>
-        <li><a th:href="'/repository/' + ${fullProjectName} + '/commits'">История коммитов</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName} + '/commits/'">История коммитов</a></li>
         <li><a href = "#">Настройки</a></li>
     </ul>
 </div>
@@ -221,130 +221,38 @@
 <div class="container mt-2">
     <div th:each="el : ${info}" class="alert alert-info mt-2">
         <h1 th:text="${el.fullProjectName}"></h1>
-        <select id="pageSelect" name="pageSelect" onchange="redirectToPage()" >
-            <option th:each="branch : ${allBranches}" th:value="${branch}" th:text="${branch}" th:selected="${branch == currentBranch}"></option>
-            <option value="createBranch">Создать новую ветку</option>
-        </select>
+
         <p th:text="${el.description}"></p>
-        <button class="btn-open-popup" onclick="togglePopup()">
-            Сделать коммит/загрузить файл
-        </button>
 
 
-<!--        <a th:href="'/repository/' + ${fullProjectName} + '/' + ${branch} +'/commit'">сделать коммит/загрузить файл</a>-->
 
-        <p th:if="${nullFile}" th:text="${nullFile}"></p>
-        <a th:if="${nullFile == null}" th:text="${fileName}" th:href="'/repository/' + ${fullProjectName} + '/' + ${branch} +'/' +  ${fileName}"></a>
     </div>
 </div>
+
+<table class="table table-striped-columns">
+    <thead>
+    <tr>
+        <th scope="col">Название коммита</th>
+        <th scope="col">Автор</th>
+        <th scope="col">Ветка</th>
+        <th scope="col">Дата</th>
+        <th scope="col">Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="commit: ${commitsInfo}">
+        <th th:text="${commit.getCommitName()}" scope="row"></th>
+        <td th:text="${commit.getAuthorName()}"></td>
+        <td th:text="${commit.getBranchName()}"></td>
+        <td th:text="${commit.getCommitDateTime()}"></td>
+        <td><a th:href="'/repository/' + ${fullProjectName} + '/commit/' + ${commit.getId()}">Сравнить изменения</a></td>
+    </tr>
+    </tbody>
+</table>
 
 <div class="container mt-auto" th:insert="~{blocks/footer :: footer}">
 </div>
 
-<div id="popupOverlay"
-     class="overlay-container">
-    <div class="popup-box">
-        <h2 style="color: green;">Сделать коммит</h2>
-        <!--        <form th:action="'/repository/' + ${fullProjectName}" method="post" enctype="multipart/form-data">-->
-        <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
-        <!--            <input type="file" name="file" placeholder="Загрузка файлов"/>-->
-        <!--            <button type="submit" class="btn btn-success">загрузить</button>-->
-        <!--        </form>-->
-        <form class="form-container" th:action="'/repository/' + ${fullProjectName} + '/' + ${branch} +'/commit'" method="post" enctype="multipart/form-data">
-            <label class="form-label"
-                   for="commitName">
-                Сообщение коммита:
-            </label>
-            <input class="form-input" type="text"
-                   placeholder="Сообщение коммита"
-                   id="commitName" name="commitName" required>
-
-            <label class="form-label" for="description">Описание</label>
-            <input class="form-input"
-                   type="text"
-                   placeholder="Добавьте дополнительное описание"
-                   id="description"
-                   name="description" required>
-
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <input type="file" name="file" placeholder="Выберите файл"/>
-
-            <button class="btn-submit"
-                    type="submit">
-                Закоммитить изменения
-            </button>
-        </form>
-
-        <button class="btn-close-popup"
-                onclick="togglePopup()">
-            Закрыть окно
-        </button>
-    </div>
-</div>
-
-<div id="newBranchOverlay"
-     class="overlay-container">
-    <div class="popup-box">
-        <h2 style="color: green;">Сделать коммит</h2>
-        <!--        <form th:action="'/repository/' + ${fullProjectName}" method="post" enctype="multipart/form-data">-->
-        <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
-        <!--            <input type="file" name="file" placeholder="Загрузка файлов"/>-->
-        <!--            <button type="submit" class="btn btn-success">загрузить</button>-->
-        <!--        </form>-->
-        <form class="form-container" th:action="'/repository/' + ${fullProjectName} + '/createBranch'" method="post" >
-            <label class="form-label"
-                   for="branchName">
-                Название новой ветки:
-            </label>
-            <input class="form-input" type="text"
-                   placeholder="Название новой ветки"
-                   id="branchName" name="branchName" required>
-            <label class="form-label"
-                   for="branchSource">
-                Источник:
-            </label>
-            <select id="branchSource" name="branchSource" th:each="branch : ${allBranches}" th:selected="${branch} == ${currentBranch}">
-                <option th:value="${branch}" th:text="${branch}"></option>
-            </select>
-
-
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-
-            <button class="btn-submit"
-                    type="submit">
-                Закоммитить изменения
-            </button>
-        </form>
-
-        <button class="btn-close-popup"
-                onclick="togglePopup()">
-            Закрыть окно
-        </button>
-    </div>
-</div>
 <script th:src="@{resources/static/assets/dist/js/bootstrap.bundle.min.js}"></script>
-<script th:inline="javascript">
-    function togglePopup() {
-        const overlay = document.getElementById('popupOverlay');
-        overlay.classList.toggle('show');
-    }
-    function redirectToPage() {
-        /*<![CDATA[*/
-        var selectedPage = document.getElementById("pageSelect").value;
-        var fullProjectName = [[${fullProjectName}]];
-        if (selectedPage !== "createBranch") {
-            window.location.href = "/repository/" + fullProjectName +"/" + selectedPage;
-        }
-        else {
-            togglePopupNewBranch();
-        }
-        /*]]>*/
-    }
-
-    function togglePopupNewBranch() {
-        const overlay = document.getElementById('newBranchOverlay');
-        overlay.classList.toggle('show');
-    }
-</script>
 </body>
 </html>

@@ -4,11 +4,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +20,7 @@ import java.util.List;
 
 public class DrawProgramService {
     static String lastNode = "";
-    public static StringBuilder drawFullCode(String fileName) {
+    public static StringBuilder drawFullCode(byte[] fileText) {
         StringBuilder jsCode = new StringBuilder();
         jsCode.append("var canvas = document.getElementById('myCanvas');\n");
         jsCode.append("var ctx = canvas.getContext('2d');\n");
@@ -29,9 +32,10 @@ public class DrawProgramService {
         int y = 50; // Initial y position
         try {
             // Load and parse the XML file
-            File xmlFile = new File(fileName);
+//            File xmlFile = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            InputSource xmlFile = new InputSource(new ByteArrayInputStream(fileText));
             Document doc = dBuilder.parse(xmlFile);
 
             // Normalize the document
