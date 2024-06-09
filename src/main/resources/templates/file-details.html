@@ -94,6 +94,42 @@
         .left {
             float: left !important;
         }
+
+        .tab {
+            overflow: hidden;
+            border: 1px solid #4CAF50;
+            background-color: #C8E6C9;
+        }
+
+
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+
+        .tab button:hover {
+            background-color: #FFEB3B;
+        }
+
+
+        .tab button.active {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #4CAF50;
+            border-top: none;
+        }
     </style>
     <link th:href="@{css/headers.css}" rel="stylesheet">
 </head>
@@ -103,17 +139,34 @@
 
 <div class="align-items-center justify-content-center justify-content-md-between border-bottom py-3">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-evenly mb-md-0">
-        <li><a href ="#">Code/Graph</a></li>
-        <li><a href = "#">Pull requests</a></li>
-        <li><a href = "#">Settings</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName}">Репозиторий</a></li>
+        <li><a th:href = "'/repository/' + ${fullProjectName} + '/pulls'">Pull requests</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName} + '/commits'">История коммитов</a></li>
+        <li><a th:href = "'/repository/' + ${fullProjectName} + '/settings'">Настройки</a></li>
     </ul>
 </div>
-
 <div class="container mt-2">
     <h1>Содержимое файла:</h1>
-    <pre th:text="${fileContent}" th:if="${not #strings.isEmpty(fileContent) == true}">Содержимое файла загрузится здесь.</pre>
-    <p th:text="${error}" th:if="${not #strings.isEmpty(error) == true}">Произошла ошибка при загрузке файла.</p>
-    <canvas id="myCanvas" width="800px" height="600px"></canvas>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Code')">Код</button>
+        <button class="tablinks" onclick="openTab(event, 'Block')">Блок-схема</button>
+    </div>
+
+    <div id="Code" class="tabcontent">
+        <h3>Код файла:</h3>
+        <pre th:text="${fileContent}" th:if="${not #strings.isEmpty(fileContent) == true}">Содержимое файла загрузится здесь.</pre>
+        <p th:text="${error}" th:if="${not #strings.isEmpty(error) == true}">Произошла ошибка при загрузке файла.</p>
+    </div>
+
+    <div id="Block" class="tabcontent">
+        <h3>Блок схема</h3>
+        <canvas id="myCanvas" width="800px" height="1600px"></canvas>
+    </div>
+
+<!--    <h1>Содержимое файла:</h1>-->
+<!--    <pre th:text="${fileContent}" th:if="${not #strings.isEmpty(fileContent) == true}">Содержимое файла загрузится здесь.</pre>-->
+<!--    <p th:text="${error}" th:if="${not #strings.isEmpty(error) == true}">Произошла ошибка при загрузке файла.</p>-->
+<!--    <canvas id="myCanvas" width="800px" height="1600px"></canvas>-->
 </div>
 
 
@@ -124,6 +177,24 @@
 <script th:src="@{assets/js/color-modes.js}"></script>
 <script th:inline="javascript">
     [(${javascriptCommands})]
+</script>
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
 </script>
 </body>
 </html>

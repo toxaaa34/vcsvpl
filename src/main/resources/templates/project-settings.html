@@ -210,8 +210,8 @@
 
 <div class="align-items-center justify-content-center justify-content-md-between border-bottom py-3">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-evenly mb-md-0">
-        <li><a th:href="'/repository/' + ${fullProjectName}">Код/Блок-схема</a></li>
-        <li><a href="#">Pull requests</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName}">Репозиторий</a></li>
+        <li><a th:href = "'/repository/' + ${fullProjectName} + '/pulls'">Pull requests</a></li>
         <li><a th:href="'/repository/' + ${fullProjectName} + '/commits'">История коммитов</a></li>
         <li><a th:href="'/repository/' + ${fullProjectName} + '/settings'">Настройки</a></li>
     </ul>
@@ -220,7 +220,6 @@
 <div class="container mt-2">
     <div th:each="el : ${info}" class="alert alert-info mt-2">
         <h1 th:text="${el.fullProjectName}"></h1>
-        <h2 th:text="${el.description}"></h2>
 
         <h5>Доступ к проекту:</h5>
         <table class="table table-striped-columns">
@@ -245,7 +244,6 @@
         <button class="btn-open-popup" onclick="togglePopup()">
             Добавить пользователя
         </button>
-        <br>
         <br>
         <br>
         <button class="btn btn-danger">Удалить репозиторий</button>

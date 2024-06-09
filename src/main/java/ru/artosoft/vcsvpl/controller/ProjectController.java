@@ -18,6 +18,7 @@ import ru.artosoft.vcsvpl.service.DrawProgramService;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +38,8 @@ public class ProjectController {
     private ProjectAccessRepository projectAccessRepository;
     @Autowired
     private PullRequestRepository pullRequestRepository;
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     @GetMapping("/welcome")
     public String welcome(Model model) {
@@ -68,6 +71,17 @@ public class ProjectController {
         BranchEntity branch = new BranchEntity(project.getId(), project.getFullProjectName(), "main");
         branchRepository.save(branch);
         return "redirect:/repository/" + project.getFullProjectName() + "/main";
+    }
+
+    @GetMapping("/searchproject")
+    public String searchProject(@RequestParam String searchProject, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name = authentication.getName();
+        UserEntity user = userRepository.findByUsername(name);
+
+        Iterable<ProjectEntity> projects = projectRepository.findAllByFullProjectNameContains(searchProject);
+        model.addAttribute("projects", projects);
+        return "searchresult";
     }
 
     @GetMapping("/repository/{authorName}/{projectName}")
@@ -122,11 +136,7 @@ public class ProjectController {
     @GetMapping("/repository/{authorName}/{projectName}/{branch}")
     public String repositoryDetails(@PathVariable(value = "authorName") String authorName, @PathVariable(value = "projectName") String projectName, @PathVariable(value = "branch") String branch, Model model, Principal principal) {
         String fullProjectName = authorName + "/" + projectName;
-        if (!projectRepository.existsByFullProjectName(fullProjectName)) {
-            return "repositorynotfound";
-        }
-        if (!branchRepository.existsByFullProjectNameAndBranchName(fullProjectName, branch)) {
-            //изменить на "не найдена ветка"
+        if (!projectRepository.existsByFullProjectName(fullProjectName) || !branchRepository.existsByFullProjectNameAndBranchName(fullProjectName, branch)) {
             return "repositorynotfound";
         }
 
@@ -138,6 +148,14 @@ public class ProjectController {
         String author = project.get().getAuthorName();
         ArrayList<ProjectEntity> res = new ArrayList<>();
         project.ifPresent(res::add);
+
+        if (!project.get().getIsPublic()){
+            if (!projectAccessRepository.existsByUserIdAndFullProjectName(user.getId(), fullProjectName)) {
+                if (!project.get().getAuthorId().equals(user.getId())) {
+                    return "accessdenied";
+                }
+            }
+        }
 
         if (projectAccessRepository.existsByUserIdAndFullProjectName(user.getId(), project.get().getFullProjectName())
                 || project.get().getAuthorId().equals(user.getId())) {
@@ -176,6 +194,8 @@ public class ProjectController {
         model.addAttribute("allBranches", branchesList);
         if (commit != null) {
             model.addAttribute("fileName", commit.getFileName());
+            model.addAttribute("lastEdit", dtf.format(commit.getCommitDateTime()));
+            model.addAttribute("commitName", commit.getCommitName());
         }
         return "project-details";
     }
@@ -272,24 +292,6 @@ public class ProjectController {
         ArrayList<ProjectEntity> res = new ArrayList<>();
         project.ifPresent(res::add);
 
-
-//        String folderPath = "src/projects/" + authorName + "/" + projectName + "/main";
-//        File folder = new File(folderPath);
-//        File[] listOfFiles = folder.listFiles();
-//        ArrayList<String> fileNames = new ArrayList<>();
-//
-//        if (listOfFiles != null) {
-//            for (File file : listOfFiles) {
-//                if (file.isFile()) {
-//                    fileNames.add(file.getName());
-//                }
-//            }
-//        }
-
-
-//        String filePath = "src/projects/" + authorName + "/" + projectName + "/main/" + fileName;
-//
-
         CommitEntity commit = commitRepository.findTopByFullProjectNameAndBranchNameOrderByIdDesc(fullProjectName, branch);
         byte[] fileText = commit.getNewContent();
 
@@ -314,6 +316,7 @@ public class ProjectController {
 //        }
 
         model.addAttribute("projectName", project.get().getProjectName());
+        model.addAttribute("fullProjectName", fullProjectName);
         model.addAttribute("info", res);
         model.addAttribute("author", author);
         model.addAttribute("currentUser", principal.getName());
@@ -394,7 +397,7 @@ public class ProjectController {
             model.addAttribute("javascriptCommandsNew", jsNew);
         } else {
             String codeText = new String(commit.get().getNewContent());
-            StringBuilder jsCodeOld = DrawProgramService.drawFullCode(commit.get().getNewContent(), "jsOld");
+            StringBuilder jsCodeOld = DrawProgramService.drawFullCode(commit.get().getNewContent(), "jsNew");
             String jsNew = jsCodeOld.toString();
 
             model.addAttribute("codeText", codeText);
@@ -407,6 +410,7 @@ public class ProjectController {
         model.addAttribute("currentUser", principal.getName());
         model.addAttribute("username", user.getUsername());
         model.addAttribute("allBranches", branchesList);
+        model.addAttribute("commitInfo", commit);
         return "commit-compare";
     }
 

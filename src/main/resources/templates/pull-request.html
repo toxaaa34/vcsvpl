@@ -201,6 +201,42 @@
             display: flex;
             opacity: 1;
         }
+
+        .tab {
+            overflow: hidden;
+            border: 1px solid #4CAF50;
+            background-color: #C8E6C9;
+        }
+
+
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+
+        .tab button:hover {
+            background-color: #FFEB3B;
+        }
+
+
+        .tab button.active {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #4CAF50;
+            border-top: none;
+        }
     </style>
     <link th:href="@{css/headers.css}" rel="stylesheet">
 </head>
@@ -210,7 +246,7 @@
 
 <div class="align-items-center justify-content-center justify-content-md-between border-bottom py-3">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-evenly mb-md-0">
-        <li><a th:href="'/repository/' + ${fullProjectName}">Код/Блок-схема</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName}">Репозиторий</a></li>
         <li><a href="#">Pull requests</a></li>
         <li><a th:href="'/repository/' + ${fullProjectName} + '/commits'">История коммитов</a></li>
         <li><a th:href="'/repository/' + ${fullProjectName} + '/settings'">Настройки</a></li>
@@ -221,21 +257,37 @@
     <div th:each="el : ${info}" class="alert alert-info mt-2">
         <h1 th:text="${el.fullProjectName}"></h1>
 
-        <h3 th:text="${pullRequest.getTitle()}"></h3>
-        <h3 th:text="${pullRequest.getDescription()}"></h3>
-        <h3 th:text="${pullRequest.getAuthorName()}"></h3>
-        <h3 th:text="${pullRequest.getBranchNameFrom()}"></h3>
-        <h3 th:text="${pullRequest.getBranchNameTo()}"></h3>
-        <h3 th:text="${pullRequest.getCommitDateTime()}"></h3>
-        <h3 th:text="${pullRequest.getIsClosed()}"></h3>
-        <div class="container mt-2">
-            <h1>Код изменений:</h1>
-            <pre th:text="${codeText}" th:if="${not #strings.isEmpty(codeText) == true}">Содержимое файла загрузится здесь.</pre>
-            <p th:text="${error}" th:if="${not #strings.isEmpty(error) == true}">Произошла ошибка при загрузке
-                файла.</p>
-            <canvas id="jsOld" width="800px" height="600px"></canvas>
-            <canvas id="jsNew" width="800px" height="600px"></canvas>
+        <h3 th:text="'Название PR: ' + ${pullRequest.getTitle()}"></h3>
+        <h3 th:text="'Описание: ' +${pullRequest.getDescription()}"></h3>
+        <h3 th:text="'Автор: ' + ${pullRequest.getAuthorName()}"></h3>
+        <h3 th:text="'Из ветки ' + ${pullRequest.getBranchNameFrom()} + ' в ' + ${pullRequest.getBranchNameTo()}"></h3>
+        <h3 th:text="'Дата создания PR: ' + ${pullRequest.getCommitDateTime()}"></h3>
+        <h3 th:if="${pullRequest.getIsClosed() == true}">Закрыт</h3>
+        <h3 th:if="${pullRequest.getIsClosed() == false}">Открыт</h3>
+    </div>
+
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Code')">Код</button>
+            <button class="tablinks" onclick="openTab(event, 'BlockBefore')">Блок-схема до</button>
+            <button class="tablinks" onclick="openTab(event, 'BlockAfter')">Блок-схема после</button>
         </div>
+
+        <div id="Code" class="tabcontent">
+            <h3>Код изменений:</h3>
+            <pre th:text="${codeText}" th:if="${not #strings.isEmpty(codeText) == true}">Содержимое файла загрузится здесь.</pre>
+            <p th:text="${error}" th:if="${not #strings.isEmpty(error) == true}">Произошла ошибка при загрузке файла.</p>
+        </div>
+
+        <div id="BlockBefore" class="tabcontent">
+            <h3>Блок схема до коммита:</h3>
+            <canvas id="jsOld" width="1000px" height="1600px"></canvas>
+        </div>
+
+        <div id="BlockAfter" class="tabcontent">
+            <h3>Блок схема после коммита:</h3>
+            <canvas id="jsNew" width="1000px" height="1600px"></canvas>
+        </div>
+
         <form th:if="${pullRequest.getIsClosed() == false}" th:action="@{'/repository/' + ${fullProjectName} + '/pull/' + ${pullRequest.getId()} + '/confirm'}"
               method="post">
             <button type="submit" class="btn btn-submit">Принять ПР</button>
@@ -244,7 +296,6 @@
               method="post">
             <button type="submit" class="btn btn-danger">Закрыть PR</button>
         </form>
-    </div>
 </div>
 
 <div class="container mt-auto" th:insert="~{blocks/footer :: footer}">
@@ -262,6 +313,24 @@
 </script>
 <script th:inline="javascript">
     [(${javascriptCommandsNew})]
+</script>
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
 </script>
 </body>
 </html>

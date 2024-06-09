@@ -13,5 +13,6 @@ public interface ProjectRepository extends CrudRepository<ProjectEntity, Long> {
     Optional<ProjectEntity> findByFullProjectName(String projectName);
     Iterable<ProjectEntity> findAllByIsPublic(Boolean isPublic);
 
+    Iterable<ProjectEntity> findAllByFullProjectNameContains(String name);
     boolean existsByFullProjectName(String projectName);
 }

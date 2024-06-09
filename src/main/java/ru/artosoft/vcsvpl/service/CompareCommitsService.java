@@ -5,12 +5,7 @@ import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.DeltaType;
 
-
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class CompareCommitsService {
@@ -26,23 +21,19 @@ public class CompareCommitsService {
             for (AbstractDelta<String> delta : patch.getDeltas()) {
                 if (delta.getType() == DeltaType.DELETE) {
                     for (Object line : delta.getSource().getLines()) {
-                        fullFile.append("- " + line + "\n");
-//                        System.out.println("- " + line);
+                        fullFile.append("-" + line + "\n");
                     }
                 } else if (delta.getType() == DeltaType.INSERT) {
                     for (Object line : delta.getTarget().getLines()) {
-                        fullFile.append("+ " + line + "\n");
-//                        System.out.println("+ " + line);
+                        fullFile.append("+" + line + "\n");
                     }
                 } else if (delta.getType() == DeltaType.CHANGE) {
                     for (Object line : delta.getTarget().getLines()) {
-                        fullFile.append("~ " + line + "\n");
-//                        System.out.println("~ " + line);
+                        fullFile.append("~" + line + "\n");
                     }
                 } else if (delta.getType() == DeltaType.EQUAL) {
                     for (Object line : delta.getTarget().getLines()) {
                         fullFile.append(" " + line + "\n");
-//                        System.out.println(" " + line);
                     }
                 }
             }

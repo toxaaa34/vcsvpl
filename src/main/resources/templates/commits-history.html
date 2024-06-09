@@ -211,21 +211,16 @@
 
 <div class="align-items-center justify-content-center justify-content-md-between border-bottom py-3">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-evenly mb-md-0">
-        <li><a href ="#">Код/Блок-схема</a></li>
-        <li><a href = "#">Pull requests</a></li>
-        <li><a th:href="'/repository/' + ${fullProjectName} + '/commits/'">История коммитов</a></li>
-        <li><a href = "#">Настройки</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName}">Репозиторий</a></li>
+        <li><a th:href = "'/repository/' + ${fullProjectName} + '/pulls'">Pull requests</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName} + '/commits'">История коммитов</a></li>
+        <li><a th:href = "'/repository/' + ${fullProjectName} + '/settings'">Настройки</a></li>
     </ul>
 </div>
 
 <div class="container mt-2">
     <div th:each="el : ${info}" class="alert alert-info mt-2">
         <h1 th:text="${el.fullProjectName}"></h1>
-
-        <p th:text="${el.description}"></p>
-
-
-
     </div>
     <table class="table table-striped-columns">
         <thead>
@@ -242,7 +237,7 @@
             <th th:text="${commit.getCommitName()}" scope="row"></th>
             <td th:text="${commit.getAuthorName()}"></td>
             <td th:text="${commit.getBranchName()}"></td>
-            <td th:text="${commit.getCommitDateTime()}"></td>
+            <td th:text="${{commit.getCommitDateTime()}}"></td>
             <td><a th:href="'/repository/' + ${fullProjectName} + '/commit/' + ${commit.getId()}">Сравнить изменения</a></td>
         </tr>
         </tbody>

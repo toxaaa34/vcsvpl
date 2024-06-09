@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.artosoft.vcsvpl.entity.ProjectEntity;
 import ru.artosoft.vcsvpl.entity.UserEntity;
+import ru.artosoft.vcsvpl.repository.ProjectRepository;
 import ru.artosoft.vcsvpl.repository.UserRepository;
 import ru.artosoft.vcsvpl.security.UserDetailsImpl;
 import ru.artosoft.vcsvpl.service.UserService;
@@ -21,10 +23,10 @@ import ru.artosoft.vcsvpl.service.UserService;
 public class MainController {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
-    UserService userService;
-
+    private UserService userService;
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @GetMapping("/")
     public String main() {
@@ -48,7 +50,10 @@ public class MainController {
     @GetMapping("/profile/{username}")
     public String profile(Model model, @PathVariable(value = "username") String name) {
         UserEntity user = userRepository.findByUsername(name);
+        Iterable<ProjectEntity> projects = projectRepository.findAllByAuthorId(user.getId());
         model.addAttribute("user", user);
+        model.addAttribute("projects", projects);
+
         return "profile";
     }
 }
