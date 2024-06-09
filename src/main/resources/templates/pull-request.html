@@ -261,7 +261,7 @@
         <h3 th:text="'Описание: ' +${pullRequest.getDescription()}"></h3>
         <h3 th:text="'Автор: ' + ${pullRequest.getAuthorName()}"></h3>
         <h3 th:text="'Из ветки ' + ${pullRequest.getBranchNameFrom()} + ' в ' + ${pullRequest.getBranchNameTo()}"></h3>
-        <h3 th:text="'Дата создания PR: ' + ${pullRequest.getCommitDateTime()}"></h3>
+        <h3 th:text="'Дата создания PR: ' + ${{pullRequest.getCommitDateTime()}}"></h3>
         <h3 th:if="${pullRequest.getIsClosed() == true}">Закрыт</h3>
         <h3 th:if="${pullRequest.getIsClosed() == false}">Открыт</h3>
     </div>
