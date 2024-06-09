@@ -1,9 +1,9 @@
 #spring.application.name=vcsvpl-api
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/vcsvpl_db
+    url: jdbc:postgresql://roundhouse.proxy.rlwy.net:24275/railway
     username: postgres
-    password: 159357Rus116
+    password: EhmSgQTzEGSFBwYZBmpiRaknhvOivNEB
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
