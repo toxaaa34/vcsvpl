@@ -13,7 +13,7 @@ import java.util.List;
 public interface CommitRepository extends JpaRepository<CommitEntity, Long> {
     boolean existsCommitEntitiesByFullProjectNameAndBranchName(String fullProjectName, String branchName);
 
-    CommitEntity findTopByFullProjectNameAndBranchNameOrderByCommitIdDesc(String fullProjectName, String branchName);
+    CommitEntity findTopByFullProjectNameAndBranchNameOrderByIdDesc(String fullProjectName, String branchName);
 
     List<CommitEntity> findAllByFullProjectNameOrderByCommitDateTimeDesc(String fullProjectName);
 

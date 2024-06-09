@@ -1,60 +1,63 @@
 package ru.artosoft.vcsvpl.service;
 
+import com.github.difflib.DiffUtils;
+import com.github.difflib.patch.Patch;
+import com.github.difflib.patch.AbstractDelta;
+import com.github.difflib.patch.DeltaType;
+
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CompareCommitsService {
 
-    public Map<Integer, String> compareCommits(byte[] oldCommitFile, byte[] newCommitFile) {
-        String fileName1 = "C:\\Users\\Anton Osipov\\Desktop\\VCSVPL\\SimpleVCSVPL\\pom.xml";
-        String fileName2 = "C:\\Users\\Anton Osipov\\Desktop\\3.fprg";
-
-        List<String> file1 = new ArrayList<>();
-
-        List<String> file2 = new ArrayList<>();
-
+    public static String compareCommits(byte[] oldCommitFile, byte[] newCommitFile) {
+        StringBuilder fullFile = new StringBuilder("");
         try {
-            file1 = Files.readAllLines(Paths.get(fileName1));
+            List<String> originalLines = byteToLines(oldCommitFile);
+            List<String> modifiedLines = byteToLines(newCommitFile);
+
+            Patch<String> patch = DiffUtils.diff(originalLines, modifiedLines, true);
+
+            for (AbstractDelta<String> delta : patch.getDeltas()) {
+                if (delta.getType() == DeltaType.DELETE) {
+                    for (Object line : delta.getSource().getLines()) {
+                        fullFile.append("- " + line + "\n");
+//                        System.out.println("- " + line);
+                    }
+                } else if (delta.getType() == DeltaType.INSERT) {
+                    for (Object line : delta.getTarget().getLines()) {
+                        fullFile.append("+ " + line + "\n");
+//                        System.out.println("+ " + line);
+                    }
+                } else if (delta.getType() == DeltaType.CHANGE) {
+                    for (Object line : delta.getTarget().getLines()) {
+                        fullFile.append("~ " + line + "\n");
+//                        System.out.println("~ " + line);
+                    }
+                } else if (delta.getType() == DeltaType.EQUAL) {
+                    for (Object line : delta.getTarget().getLines()) {
+                        fullFile.append(" " + line + "\n");
+//                        System.out.println(" " + line);
+                    }
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
-            file2 = Files.readAllLines(Paths.get(fileName2));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return fullFile.toString();
+    }
 
-        int sum = Math.max(file1.size(), file2.size());
+    private static List<String> byteToLines(byte[] fileText) throws IOException {
+        String text = new String(fileText);
 
-        System.out.println(sum);
+        return Arrays.stream(text.split("\n")).toList();
 
-        Map<Integer,String> differentElements1 = new HashMap<>();
-        Map<Integer,String> differentElements2 = new HashMap<>();
-
-        for (String element : file1) {
-            if (!file2.contains(element)) {
-                differentElements1.put(file1.indexOf(element) + 1,element);
-            }
-        }
-
-        for (String element : file2) {
-            if (!file1.contains(element)) {
-                differentElements2.put(file2.indexOf(element) + 1,element);
-            }
-        }
-
-        // Выводим элементы, которые отличаются в списках
-        System.out.println("Элементы, отличающиеся в 1 списке:");
-        differentElements1.forEach((key, value) -> System.out.println(key + " " + value));
-        System.out.println("Элементы, отличающиеся в 2 списке:");
-        differentElements2.forEach((key, value) -> System.out.println(key + " " + value));
-
-        return differentElements1;
     }
 }

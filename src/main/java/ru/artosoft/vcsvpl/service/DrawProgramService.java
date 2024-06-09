@@ -20,9 +20,9 @@ import java.util.List;
 
 public class DrawProgramService {
     static String lastNode = "";
-    public static StringBuilder drawFullCode(byte[] fileText) {
+    public static StringBuilder drawFullCode(byte[] fileText, String canvasId) {
         StringBuilder jsCode = new StringBuilder();
-        jsCode.append("var canvas = document.getElementById('myCanvas');\n");
+        jsCode.append("var canvas = document.getElementById('" + canvasId+ "');\n");
         jsCode.append("var ctx = canvas.getContext('2d');\n");
         jsCode.append("ctx.font = '12px Arial';\n");
         jsCode.append("ctx.textAlign = 'center';\n");

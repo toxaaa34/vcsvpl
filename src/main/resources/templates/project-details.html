@@ -211,10 +211,10 @@
 
 <div class="align-items-center justify-content-center justify-content-md-between border-bottom py-3">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-evenly mb-md-0">
-        <li><a href ="#">Код/Блок-схема</a></li>
-        <li><a href = "#">Pull requests</a></li>
+        <li><a th:href="'/repository/' + ${fullProjectName} + '/' + ${branch} +'/' +  ${fileName}">Код/Блок-схема</a></li>
+        <li><a th:href = "'/repository/' + ${fullProjectName} + '/pulls'">Pull requests</a></li>
         <li><a th:href="'/repository/' + ${fullProjectName} + '/commits'">История коммитов</a></li>
-        <li><a href = "#">Настройки</a></li>
+        <li><a th:href = "'/repository/' + ${fullProjectName} + '/settings'">Настройки</a></li>
     </ul>
 </div>
 
@@ -226,7 +226,7 @@
             <option value="createBranch">Создать новую ветку</option>
         </select>
         <p th:text="${el.description}"></p>
-        <button class="btn-open-popup" onclick="togglePopup()">
+        <button th:if="${buttonAccess == true}" class="btn-open-popup" onclick="togglePopup()">
             Сделать коммит/загрузить файл
         </button>
 
@@ -303,8 +303,8 @@
                    for="branchSource">
                 Источник:
             </label>
-            <select id="branchSource" name="branchSource" th:each="branch : ${allBranches}" th:selected="${branch} == ${currentBranch}">
-                <option th:value="${branch}" th:text="${branch}"></option>
+            <select id="branchSource" name="branchSource" >
+                <option th:selected="${branch} == ${currentBranch}" th:each="branch : ${allBranches}" th:value="${branch}" th:text="${branch}"></option>
             </select>
 
 
@@ -317,7 +317,7 @@
         </form>
 
         <button class="btn-close-popup"
-                onclick="togglePopup()">
+                onclick="togglePopupNewBranch()">
             Закрыть окно
         </button>
     </div>
