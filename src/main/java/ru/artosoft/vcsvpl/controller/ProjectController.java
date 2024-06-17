@@ -67,7 +67,6 @@ public class ProjectController {
         UserEntity user = userRepository.findByUsername(name);
         ProjectEntity project = new ProjectEntity(user.getId(), user.getUsername(), projectName.toLowerCase().trim().replace(" ", "_"), description, isPublic);
         projectRepository.save(project);
-//        ProjectService.createDefaultRepository(project);
         BranchEntity branch = new BranchEntity(project.getId(), project.getFullProjectName(), "main");
         branchRepository.save(branch);
         return "redirect:/repository/" + project.getFullProjectName() + "/main";
@@ -163,18 +162,6 @@ public class ProjectController {
         } else {
             model.addAttribute("buttonAccess", false);
         }
-//        String folderPath = "src/projects/" + authorName + "/" + projectName + "/main";
-//        File folder = new File(folderPath);
-//        File[] listOfFiles = folder.listFiles();
-//        ArrayList<String> fileNames = new ArrayList<>();
-//
-//        if (listOfFiles != null) {
-//            for (File file : listOfFiles) {
-//                if (file.isFile()) {
-//                    fileNames.add(file.getName());
-//                }
-//            }
-//        }
 
         CommitEntity commit = commitRepository.findTopByFullProjectNameAndBranchNameOrderByIdDesc(fullProjectName, branch);
         if (!commitRepository.existsCommitEntitiesByFullProjectNameAndBranchName(fullProjectName, branch)) {
@@ -215,27 +202,8 @@ public class ProjectController {
                 return "accessdenied";
             }
         }
-        //        if (file != null && !file.getOriginalFilename().isEmpty()) {
-//            File uploadDir = new File("src/projects/" + authorName + "/" + projectName +"/main");
-//
-//            if (!uploadDir.exists()) {
-//                uploadDir.mkdir();
-//            }
-//
-//            String resultFilename = file.getOriginalFilename();
-//
-//            file.transferTo(new File("src/projects/" + authorName + "/" + projectName +"/main/" +  resultFilename));
-//
-//        }
 
-//        String filePath = "src/projects/" + authorName + "/" + projectName + "/main/" + file.getOriginalFilename();
-//        File newFile = new File(filePath);
-//
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(newFile))) {
-//            writer.write(new String(file.getBytes()));
-//        }
         if (file == null && file.getOriginalFilename().isEmpty()) {
-            //исправить, тут должна быть ошибка
             return "redirect:/repository/{authorName}/{projectName}/" + branch;
         }
         CommitEntity commit = new CommitEntity();
@@ -305,16 +273,6 @@ public class ProjectController {
             model.addAttribute("error", "Ошибка при чтении файла");
         }
 
-
-//        try {
-//            FileWriter fileWriter = new FileWriter("src/main/resources/static/js/drawCode.js");
-//            fileWriter.write(js);
-//            fileWriter.close();
-//            System.out.println("JavaScript file 'drawCode.js' has been created successfully.");
-//        } catch (IOException e) {
-//            System.err.println("An error occurred while creating the JavaScript file: " + e.getMessage());
-//        }
-
         model.addAttribute("projectName", project.get().getProjectName());
         model.addAttribute("fullProjectName", fullProjectName);
         model.addAttribute("info", res);
@@ -322,7 +280,6 @@ public class ProjectController {
         model.addAttribute("currentUser", principal.getName());
         model.addAttribute("username", user.getUsername());
         model.addAttribute("fileNames", commit.getFileName());
-//        model.addAttribute("javascriptCommands", "static/js/drawCode.js");
         model.addAttribute("javascriptCommands", js);
         return "file-details";
     }

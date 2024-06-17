@@ -1,14 +1,21 @@
-#spring.application.name=vcsvpl-api
 spring:
+###  For Railway.app
   datasource:
     url: jdbc:postgresql://roundhouse.proxy.rlwy.net:24275/railway
     username: postgres
     password: EhmSgQTzEGSFBwYZBmpiRaknhvOivNEB
     driver-class-name: org.postgresql.Driver
+
+### For local build
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/vcsvpl_db
+#    username: postgres
+#    password: 159357Rus116
+#    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
 
     database: postgresql
-    #for test
+# for test
     show-sql: true
