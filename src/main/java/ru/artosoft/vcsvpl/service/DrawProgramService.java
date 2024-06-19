@@ -54,6 +54,10 @@ public class DrawProgramService {
     public static StringBuilder processNode(Node node, int x, int y) {
         StringBuilder code = new StringBuilder();
         Element nodeElement = (Element) node;
+        if (nodeElement.getAttribute("diff").equals("+")) code.append("ctx.strokeStyle = 'green';");
+        else if (nodeElement.getAttribute("diff").equals("-")) code.append("ctx.strokeStyle = 'red';");
+        else if (nodeElement.getAttribute("diff").equals("~")) code.append("ctx.strokeStyle = 'yellow';");
+        else code.append("ctx.strokeStyle = 'black';");
 
         if (lastNode.equals("if")) {x = lastX; y = lastY;}
         //отрисовка блоков
@@ -61,6 +65,7 @@ public class DrawProgramService {
             code.append("ctx.fillText('" + nodeElement.getAttribute("name") + "', " + (x - 10) + ", " + y + ");\n");
             code.append("\n");
         } else if (node.getNodeName().equals("body")) {
+            code.append("ctx.strokeStyle = 'black';");
             code.append("ctx.beginPath();\n");
             code.append("ctx.ellipse(" + (x + 50) + ", " + (y + 25) + ", 50, 25, 0, 0, Math.PI * 2);\n");
             code.append("ctx.stroke();\n");
@@ -299,7 +304,9 @@ public class DrawProgramService {
             code.append("ctx.lineTo(" + (x + 165) + ", " + (y + 25) + ");\n");
             code.append("ctx.lineTo(" + (x + 165) + ", " + (y + 50) + ");\n");
             code.append("ctx.stroke();\n");
-            if (node.getNodeName().equals("for")) code.append("ctx.fillText('Конец цикла', " + x + "," + (y + 15) + ");\n");
+            if (node.getNodeName().equals("for")) {
+//                code.append("ctx.fillText('Конец цикла', " + x + "," + (y + 15) + ");\n");
+                }
             else code.append("ctx.fillText('Да', " + (x + 140) + "," + (y + 15) + ");\n");
             lastX += 115;
             lastY += 50;
@@ -405,6 +412,7 @@ public class DrawProgramService {
 
         if (node.getNodeName().equals("if")) { lastNode = "if";}
         else if (node.getNodeName().equals("body")) {
+            code.append("ctx.strokeStyle = 'black';");
             code.append("ctx.beginPath();\n");
             code.append("ctx.ellipse(" + (lastX + 50) + ", " + (lastY + 25) + ", 50, 25, 0, 0, Math.PI * 2);\n");
             code.append("ctx.stroke();\n");
