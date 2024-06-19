@@ -58,12 +58,10 @@ public class CompareCommitsService {
                         if (line.toString().contains("/>")) {
                             index = line.toString().lastIndexOf("/>");
                             line = line.toString().substring(0, index) + " diff=\"-\"" + line.toString().substring(index);
-                            System.out.println(line);
                         }
                         else if (!line.toString().contains("</")) {
                             index = line.toString().lastIndexOf(">");
                             line = line.toString().substring(0, index) + " diff=\"-\"" + line.toString().substring(index);
-                            System.out.println(line);
                         }
                         fullFile.append(line + "\n");
                     }
@@ -72,12 +70,10 @@ public class CompareCommitsService {
                         if (line.toString().contains("/>")) {
                             index = line.toString().lastIndexOf("/>");
                             line = line.toString().substring(0, index) + " diff=\"+\"" + line.toString().substring(index);
-                            System.out.println(line);
                         }
                         else if (!line.toString().contains("</")) {
                             index = line.toString().lastIndexOf(">");
                             line = line.toString().substring(0, index) + " diff=\"+\"" + line.toString().substring(index);
-                            System.out.println(line);
                         }
                         fullFile.append(line + "\n");
                     }
@@ -86,18 +82,15 @@ public class CompareCommitsService {
                         if (line.toString().contains("/>")) {
                             index = line.toString().lastIndexOf("/>");
                             line = line.toString().substring(0, index) + " diff=\"~\"" + line.toString().substring(index);
-                            System.out.println(line);
                         }
                         else if (!line.toString().contains("</")) {
                             index = line.toString().lastIndexOf(">");
                             line = line.toString().substring(0, index) + " diff=\"~\"" + line.toString().substring(index);
-                            System.out.println(line);
                         }
                         fullFile.append(line + "\n");
                     }
                 } else if (delta.getType() == DeltaType.EQUAL) {
                     for (Object line : delta.getTarget().getLines()) {
-                        System.out.println(line);
                         fullFile.append(line + "\n");
                     }
                 }

@@ -397,11 +397,11 @@ public class DrawProgramService {
             code.append("ctx.beginPath();\n");
             code.append("ctx.moveTo(" + (lastX + 50) + ", " + lastY + ");\n");
             code.append("ctx.lineTo(" + (lastX - 35) + ", " + lastY + ");\n");
-            code.append("ctx.lineTo(" + (lastX - 35) + ", " + (lastY - (75 * (childsWhile / 2))) + ");\n");
+            code.append("ctx.lineTo(" + (lastX - 35) + ", " + (lastY - (75 * (childsFor / 2))) + ");\n");
             code.append("ctx.stroke();\n");
             code.append("\n");
             code.append("ctx.beginPath();\n");
-            code.append("ctx.moveTo(" + (lastX - 65) + ", " + (lastY - (75 * (childsWhile / 2))) + ");\n");
+            code.append("ctx.moveTo(" + (lastX - 65) + ", " + (lastY - (75 * (childsFor / 2))) + ");\n");
             code.append("ctx.lineTo(" + (lastX - 65) + ", " + (lastY + 25) + ");\n");
             code.append("ctx.stroke();\n");
             code.append("\n");
