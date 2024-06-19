@@ -153,6 +153,7 @@
     <h4 th:text="${commitInfo.get().getAuthorName()} + ' закоммитил ' + ${{commitInfo.get().getCommitDateTime()}}"></h4>
     <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'Code')">Код</button>
+        <button th:if="${javascriptCommandsFullDiff != null}" class="tablinks" onclick="openTab(event, 'BlockFull')">Блок-схема со всеми изменениями</button>
         <button class="tablinks" onclick="openTab(event, 'BlockBefore')">Блок-схема до</button>
         <button class="tablinks" onclick="openTab(event, 'BlockAfter')">Блок-схема после</button>
     </div>
@@ -161,6 +162,11 @@
         <h3>Код изменений:</h3>
         <pre th:text="${codeText}" th:if="${not #strings.isEmpty(codeText) == true}">Содержимое файла загрузится здесь.</pre>
         <p th:text="${error}" th:if="${not #strings.isEmpty(error) == true}">Произошла ошибка при загрузке файла.</p>
+    </div>
+
+    <div th:if="${javascriptCommandsFullDiff != null}" id="BlockFull" class="tabcontent">
+        <h3>Блок-схема со всеми изменениями:</h3>
+        <canvas id="jsFullDiff" width="1000px" height="1600px"></canvas>
     </div>
 
     <div id="BlockBefore" class="tabcontent">
@@ -186,6 +192,9 @@
 <script th:src="@{assets/dist/js/bootstrap.bundle.min.js}"></script>
 <!--<script th:src="@{js/drawCode.js}"></script>-->
 <script th:src="@{assets/js/color-modes.js}"></script>
+<script th:inline="javascript">
+    [(${javascriptCommandsFullDiff})]
+</script>
 <script th:inline="javascript">
     [(${javascriptCommandsOld})]
 </script>

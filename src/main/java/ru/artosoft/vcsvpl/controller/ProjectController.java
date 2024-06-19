@@ -349,7 +349,12 @@ public class ProjectController {
             StringBuilder jsCodeNew = DrawProgramService.drawFullCode(commit.get().getNewContent(), "jsNew");
             String jsNew = jsCodeNew.toString();
 
+            String forFlow = CompareCommitsService.compareCommitsForFlow(commit.get().getOldContent(), commit.get().getNewContent());
+            StringBuilder jsCodeFullDiff = DrawProgramService.drawFullCode(forFlow.getBytes(), "jsFullDiff");
+            String jsFullDiff = jsCodeFullDiff.toString();
+
             model.addAttribute("codeText", codeText);
+            model.addAttribute("javascriptCommandsFullDiff", jsFullDiff);
             model.addAttribute("javascriptCommandsOld", jsOld);
             model.addAttribute("javascriptCommandsNew", jsNew);
         } else {
